@@ -64,7 +64,12 @@ export default {
       setTimeout(
         () => {
           this.loading = false
-          EventBus.$emit('logged-in', { myid: "0", chatName: "Awesome hero chat" })
+          EventBus.$emit(
+            'logged-in',
+            {
+              myid: "0", chatName: (["Awesome hero chat", "Dumb chat", "Stop chatting!"])[Math.floor(Math.random() * 3)]
+            }
+          )
         },
         2000
       )

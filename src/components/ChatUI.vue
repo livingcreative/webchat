@@ -54,8 +54,18 @@
               <div class="column is-one-fifth input-buttons-container">
                 <ul class="input-buttons">
                   <li @click="smileClick()"><i class="fa fa-smile-o"></i></li>
-                  <li @click="sendPicureClick()"><i class="fa fa-picture-o"></i></li>
-                  <li @click="sendFileClick()"><i class="fa fa-paperclip"></i></li>
+                  <li class="file">
+                    <label class="file-label">
+                      <input type="file" class="file-input" accept=".jpg,.jpeg,.png,.bmp,.tif,.tiff," @change="imageChoosen($event)">
+                      <i class="fa fa-picture-o"></i>
+                    </label>
+                  </li>
+                  <li class="file">
+                    <label class="file-label">
+                      <input type="file" class="file-input" name="">
+                      <i class="fa fa-paperclip"></i>
+                    </label>
+                  </li>
                   <li class="send-btn" @click="sendMessage()"><i class="fa fa-arrow-right"></i></li>
                 </ul>
               </div>
@@ -99,8 +109,10 @@ export default {
       )
     },
 
-    sendPictureClick() {
-
+    imageChoosen(e) {
+      this.message += `<div>${e.target.value}</div>`
+      e.target.value = null
+      console.log(e)
     },
 
     sendFileClick() {
@@ -400,6 +412,14 @@ export default {
 }
 .input-buttons>li>i {
   vertical-align: middle;
+}
+.input-buttons>li.file {
+  display: flex;
+  justify-content: center;
+}
+.input-buttons>li>.file-label {
+  justify-content: center;
+  align-items: center;
 }
 li.send-btn {
   color: #8ac;
