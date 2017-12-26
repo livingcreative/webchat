@@ -6,11 +6,13 @@
 
 <script>
 import ChatUI from './components/ChatUI'
+import 'bulma/css/bulma.css'
+import './assets/style.css'
 
 export default {
   components: { 'chat-ui' : ChatUI },
   name: 'app',
-  data () {
+  data() {
     return {
       msg: 'Welcome to Your Vue.js App'
     }

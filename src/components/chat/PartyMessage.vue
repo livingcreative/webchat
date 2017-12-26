@@ -1,0 +1,30 @@
+<template>
+  <div class="media">
+    <div class="media-left">
+      <avatar :contact="message.user"></avatar>
+    </div>
+    <div class="media-content inner-messages">
+      <div><small>{{ message.user.firstName }} {{ message.user.lastName }}, {{ message.time }}</small></div>
+      <div v-for="msg in message.inner" :key="msg">
+        <div class="message party" v-html="msg"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Avatar from '../common/Avatar'
+
+export default {
+  components: { 'avatar': Avatar },
+  props: ['message'],
+  name: 'party-message'
+}
+</script>
+
+<style>
+.message.party {
+  background-color: #ececec;
+  border-top-left-radius: 0px;
+}
+</style>
