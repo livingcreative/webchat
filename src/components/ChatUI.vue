@@ -31,8 +31,14 @@
     </div>
 
     <div class="contacts">
-      <div class="you">
-        <div class="avatar"><span>You</span></div>
+      <div class="media you">
+        <div class="media-left">
+          <div class="avatar"><span>You</span></div>
+        </div>
+        <div class="media-content contact-info">
+          <div class="no-wrap"><strong>{{ firstName }} {{ lastName }}</strong></div>
+          <div class="no-wrap"></div>
+        </div>
       </div>
       <div class="contact-container">
         <contact-list :contacts="contacts"></contact-list>
@@ -78,6 +84,7 @@ import ContactList from './contacts/ContactList'
 import MessageList from './chat/MessageList'
 import EventBus from '../modules/events'
 import Auth from '../modules/auth'
+import SocketAPI from '../modules/sockets'
 
 export default {
   components: { 'contact-list': ContactList, 'message-list': MessageList },
@@ -121,6 +128,9 @@ export default {
       let message = this.message.trim()
 
       if (message.length) {
+        SocketAPI.send({ type: 'message', message: this.message, time: new Date() })
+
+        /* TODO: this one will be used to display message in sending status, after actual WS message it will be updated to sent status
         EventBus.$emit(
           'message-arrived',
           {
@@ -129,6 +139,7 @@ export default {
             message: this.message
           }
         )
+        */
         this.message = ""      
       }
     }
@@ -170,19 +181,72 @@ export default {
         EventBus.$emit('update-message-list')
       }
     )
+
+    EventBus.$on(
+      'user-joined',
+      (user) => {
+        this.$set(
+          this.contacts, user.userId,
+          {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            lastMessage: ""
+          }
+        )
+      }
+    )
+
+    EventBus.$on(
+      'user-left',
+      (user) => {
+        this.$delete(this.contacts, user.userId)
+      }
+    )
+
+    SocketAPI.connect(this.myid)
+
+    EventBus.$emit('update-message-list', true)
+  },
+
+  destroyed() {
+    SocketAPI.disconnect()
+
+    EventBus.$off('message-arrived')
+    EventBus.$off('user-joined')
+    EventBus.$off('user-left')
   },
 
   data() {
     return {
       chatName: this.chat.chatName,
       myid: this.chat.myid,
+      firstName: this.chat.firstName,
+      lastName: this.chat.lastName,
 
       contactsActive: true,
       menuActive: false,
 
       message: "",
       contacts: this.chat.contacts,
-      messages: []
+      messages: this.chat.messages.reduce((res, val) => {
+        let user = res.find(value => value.user.id === val.user)
+        if (!user) {
+          user = {
+            user: {
+              id: val.user.id,
+              firstName: val.user.firstName,
+              lastName: val.user.lastName
+            },
+            time: new Date(val.time),
+            inner: []
+          }
+          res.push(user)
+        }
+        
+        user.inner.push(val.message)
+
+        return res
+      }, [])
     }
   }
 }
@@ -354,6 +418,7 @@ export default {
 
 
 .you {
+  flex-shrink: 0;
   border-bottom: 1px solid rgba(219, 219, 219, 0.5);
   overflow: hidden;
 }
@@ -365,6 +430,11 @@ export default {
 .you .avatar {
   border: 1px solid #ccc;
   background-color: #ececec;
+}
+
+.you .avatar > span {
+  font-size: 0.75em;
+  color: #888;
 }
 
 .contact-container {

@@ -108,6 +108,10 @@ export default {
     ),
 
     login() {
+      if (!this.readyForLogin) {
+        return
+      }
+
       this.loading = true
       Auth.Login(this.nickName, this.firstName, this.lastName)
         .then(data => {
@@ -116,6 +120,8 @@ export default {
             'logged-in',
             {
               myid: this.nickName,
+              firstName: this.firstName,
+              lastName: this.lastName,
               chatName: data.chat.title,
               contacts: data.chat.users,
               messages: data.chat.messages

@@ -20,9 +20,9 @@ export default {
   name: 'message-list',
 
   mounted() {
-    EventBus.$on('update-message-list', () => {
+    EventBus.$on('update-message-list', (scroll) => {
       let el = this.$el
-      if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
+      if (scroll || (el.scrollTop + el.clientHeight >= el.scrollHeight)) {
         this.$nextTick(() => { el.scrollTop = el.scrollHeight })
       }
     })
