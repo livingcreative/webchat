@@ -26,5 +26,6 @@ export default {
 .message.party {
   background-color: #ececec;
   border-top-left-radius: 0px;
+  margin-right: 30px;
 }
 </style>

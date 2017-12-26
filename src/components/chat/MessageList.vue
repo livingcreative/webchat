@@ -23,9 +23,7 @@ export default {
 
 <style>
 .message-list {
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  padding-top: 1rem;
 }
 .message-block {
   padding-bottom: 10px;

@@ -1,3 +1,6 @@
+html {
+  overflow: hidden;
+}
 .avatar {
   width: 48px;
   height: 48px;
@@ -16,4 +19,17 @@
 }
 .inner-messages {
   margin-bottom: 10px;
+}
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+}
+:hover::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+}
+::-webkit-scrollbar-track {
+  background: none;
 }

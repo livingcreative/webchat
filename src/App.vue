@@ -5,8 +5,9 @@
 </template>
 
 <script>
-import ChatUI from './components/ChatUI'
+import 'font-awesome/css/font-awesome.css'
 import 'bulma/css/bulma.css'
+import ChatUI from './components/ChatUI'
 import './assets/style.css'
 
 export default {

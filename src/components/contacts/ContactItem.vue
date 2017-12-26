@@ -28,6 +28,12 @@ export default {
   right: 0px;
   overflow: hidden;
 }
+.contact-item:first-child {
+  padding-top: 1rem;
+}
+.contact-item:last-child {
+  padding-bottom: 1rem;
+}
 .media-content {
   position: relative;
 }

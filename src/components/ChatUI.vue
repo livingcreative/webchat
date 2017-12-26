@@ -1,31 +1,55 @@
 <template>
-  <div class="columns">
-    <div class="column is-one-fifth contact-list">
-      <div class="level you">
-        <div class="level-left">
-          <div class="avatar"><span>You</span></div>
-        </div>
-        <div class="level-right">
-          <div class="menu-btn">
-            <ul><li></li><li></li><li></li></ul>
+  <div>
+    <!-- chat top bar -->
+    <div class="columns chat-panel top-bar">
+      <div class="column is-one-fifth">
+        <div class="level you">
+          <div class="level-left">
+            <div class="avatar"><span>You</span></div>
+          </div>
+          <div class="level-right">
+            <div class="menu-btn">
+              <ul><li></li><li></li><li></li></ul>
+            </div>
           </div>
         </div>
       </div>
-      <div>
-        <contact-list :contacts="contacts"></contact-list>
+
+      <div class="column is-four-fifths">
+        <div class="level chat-bar">
+          <div class="level-left">
+            <div class="chat-name">{{ chatName }}</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="column is-four-fifths chat-content">
-      <div class="level chat-bar">
-        <div class="level-left">
-          <div class="chat-name">{{ chatName }}</div>
-        </div>
-
+    <!-- chat main content -->
+    <div class="columns chat-panel main-bar">
+      <div class="column is-one-fifth contact-container">
+        <contact-list :contacts="contacts"></contact-list>
       </div>
-      <div>
-        <message-list :messages="messages"></message-list>
-        <div>Type a message</div>
+      <div class="column is-four-fifths chat-messages">
+        <div class="chat-area">
+          <message-list :messages="messages" class="chat-container"></message-list>
+        </div>
+        <div class="input-area">
+          <div class="chat-container input-controls">
+            <div class="columns chat-panel">
+              <div class="column is-three-quarters">
+                <textarea class="textarea" rows="3" placeholder="Type some text" v-model="message"></textarea>
+              </div>
+              <div class="column is-one-quarter input-buttons-container">
+                <ul class="input-buttons">
+                  <li><i class="fa fa-smile-o"></i></li>
+                  <li><i class="fa fa-picture-o"></i></li>
+                  <li><i class="fa fa-paperclip"></i></li>
+                  <li class="send-btn"><i class="fa fa-arrow-right"></i></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -46,6 +70,7 @@ export default {
   data() {
     return {
       chatName: "Awesome hero chat",
+      message: "",
       contacts: [
         {
           id: "1",
@@ -97,7 +122,7 @@ export default {
           time: "1:27 PM",
           inner: [
             "Give me a gun!",
-            "I need to shoot some demons now!",
+            "I need to shoot some demons now! I need to shoot some demons now! I need to shoot some demons now! I need to shoot some demons now!",
             "Where are demons?"
           ]
         },
@@ -192,10 +217,84 @@ export default {
   height: 48px;
   font-size: 1.5em;
 }
-.contact-list {
-  padding-right: 0px;
+.chat-container {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.chat-content {
-  padding-left: 0px;
+.chat-panel, .chat-panel:not(:last-child), .chat-panel:last-child {
+  margin: 0;
+}
+.top-bar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.main-bar {
+  position: fixed;
+  left: 0;
+  top: 78px;
+  right: 0;
+  bottom: 0;
+}
+.contact-container {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.chat-messages {
+  background-color: rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+.chat-area {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.input-area {
+  padding: 1rem 0;
+}
+.input-controls {
+  padding: 0 15px;
+}
+.input-buttons-container {
+  position: relative;
+}
+.input-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+}
+.input-buttons>li {
+  color: #8ac;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  margin-left: 10px;
+  border-radius: 15px;
+  text-align: center;
+  line-height: 25px;
+}
+.input-buttons>li:hover {
+  color: #fff;
+  background-color: #8cf;
+}
+.input-buttons>li>i {
+  vertical-align: middle;
+}
+li.send-btn {
+  color: #8ac;
+  background-color: #eaeaea;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  line-height: 33px;
+}
+.column {
+  padding: 0;
 }
 </style>
