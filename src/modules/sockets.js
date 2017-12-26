@@ -7,6 +7,8 @@ function SocketAPI() {
 }
 
 SocketAPI.prototype.connect = function (id) {
+    this._expect = {}
+
     this._socket = new WebSocket(`ws://${window.location.host}/ws`)
 
     this._socket.onopen = event => {
@@ -18,10 +20,17 @@ SocketAPI.prototype.connect = function (id) {
         console.log('WS connection closed!')
     }
 
-    this._socket.onmessage = event => {
-        console.log('WS event received')
-
+    this._socket.onmessage = event => {        
         const message = JSON.parse(event.data)
+
+        console.log('WS event received: ', message.type)
+        
+        const expected = this._expect[message.type + ":" + message.uid]
+        if (expected) {
+            expected.callback(message, true)
+            delete this._expect[message.type + ":" + message.uid]
+        }
+
         switch (message.type) {
             case 'accepted':
                 console.log('WS accepted: ', message.data)
@@ -58,12 +67,37 @@ SocketAPI.prototype.connect = function (id) {
                     }
                 )
                 break
+
+            case 'webrtc-request':
+                EventBus.$emit(
+                    'webrtc-request',
+                    {
+                        uid: message.uid
+                    }
+                )
+                break
         }
     }
 }
 
 SocketAPI.prototype.send = function (data) {
     this._socket.send(JSON.stringify(data))
+}
+
+SocketAPI.prototype.expect = function (data, type) {
+    this.send(data)
+
+    return new Promise((resolve, reject) => {
+        this._expect[type + ":" + data.uid] = {
+            callback: (data, success) => {
+                if (success) {
+                    resolve(data)
+                } else {
+                    reject(data)
+                }
+            }
+        }
+    })
 }
 
 SocketAPI.prototype.disconnect = function () {

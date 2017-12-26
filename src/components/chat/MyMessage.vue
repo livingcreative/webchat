@@ -27,7 +27,10 @@ export default {
 .inner-messages.my {
   text-align: right;
 }
-.my .message>div {
+.my .message > .text {
   text-align: left;
+}
+.my .message .attachment .button:not(.is-loading) {
+  display: none;
 }
 </style>

@@ -5,7 +5,7 @@
     </div>
     <div class="media-content inner-messages">
       <div><small>{{ message.user.firstName }} {{ message.user.lastName }}, {{ messageTime(message.time) }}</small></div>
-      <message-block class="party" :messages="message.inner"></message-block>
+      <message-block class="party" :messages="message.inner" :user="message.user.id"></message-block>
     </div>
   </div>
 </template>

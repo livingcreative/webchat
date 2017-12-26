@@ -92,6 +92,7 @@ import MessageList from './chat/MessageList'
 import EventBus from '../modules/events'
 import Auth from '../modules/auth'
 import SocketAPI from '../modules/sockets'
+import { WebRTCSender } from '../modules/webrtc'
 import { ATT_IMAGE, ATT_FILE, isFileAttachment, isImageAttachment } from '../modules/messages'
 
 export default {
@@ -119,6 +120,7 @@ export default {
     },
 
     smileClick() {
+      /*
       EventBus.$emit(
         'message-arrived',
         {
@@ -127,13 +129,30 @@ export default {
           message: "Hey! This is incoming message from server!"
         }
       )
+      */
+    },
+
+    attachmentId() {
+      let result = '';
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+      for (var n = 0; n < 32; n++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length))
+
+      }
+
+      return result
     },
 
     attachFiles(type, picker) {
       for (var n = 0; n < picker.files.length; ++n) {
         const file = picker.files.item(n)
         this.attachments.push({
-          type: type, name: file.name, file: file
+          id: this.attachmentId(),
+          type: type,
+          name: file.name,
+          size: file.size,
+          file: file
         })
       }
       picker.value = null
@@ -155,19 +174,36 @@ export default {
           type: 'message',
           message: this.message,
           time: new Date(),
-          attachments: this.attachments.map(att => ({ type: att.type, name: att.name }))
+          attachments: this.attachments.map(att => ({
+            id: att.id,
+            type: att.type,
+            name: att.name,
+            size: att.size
+          }))
         })
 
-        /* TODO: this one will be used to display message in sending status, after actual WS message it will be updated to sent status
         EventBus.$emit(
           'message-arrived',
           {
             time: new Date(),
             userId: this.myid,
-            message: this.message
+            message: this.message,
+            attachments: this.attachments.map(att => {
+              let result = {
+                id: att.id,
+                type: att.type,
+                name: att.name,
+                size: att.size
+              }
+              if (att.type === ATT_IMAGE) {
+                result.downloading = true
+                result.src = window.URL.createObjectURL(att.file)
+              }
+              return result
+            }),
+            justsent: true
           }
         )
-        */
 
         for (var att of this.attachments) {
           this.published.push(att)
@@ -182,11 +218,22 @@ export default {
   mounted() {
     EventBus.$on(
       'message-arrived',
-      (message) => {
+      message => {
         const itsme = message.userId === this.myid
         const user = itsme ? null : this.contacts[message.userId]
 
+        // TODO: remove this return, find a way to check send confirmation
+        if (itsme && !message.justsent) {
+          return
+        }
+
         let lastChatMessage = this.messages.length > 0 ? this.messages[this.messages.length - 1] : null
+
+        const messageToPut = {
+          time: message.time,
+          text: message.message,
+          attachments: message.attachments
+        }
 
         if (lastChatMessage === null || lastChatMessage.user.id !== message.userId) {
           lastChatMessage = {
@@ -195,7 +242,7 @@ export default {
               itsme: itsme
             },
             time: message.time,
-            inner: [ { text: message.message, attachments: message.attachments } ]
+            inner: [ messageToPut ]
           }
 
           if (user) {
@@ -205,7 +252,15 @@ export default {
 
           this.messages.push(lastChatMessage)
         } else {
-          lastChatMessage.inner.push({ text: message.message, attachments: message.attachments })
+          const sendconfirmation = 
+            !message.justsent && lastChatMessage.inner.length > 0 &&
+            lastChatMessage.inner[lastChatMessage.inner.length - 1].time.getTime() === message.time.getTime()
+
+          if (sendconfirmation) {
+            return
+          }
+
+          lastChatMessage.inner.push(messageToPut)
         }
 
         if (user) {
@@ -218,7 +273,7 @@ export default {
 
     EventBus.$on(
       'user-joined',
-      (user) => {
+      user => {
         this.$set(
           this.contacts, user.userId,
           {
@@ -232,8 +287,15 @@ export default {
 
     EventBus.$on(
       'user-left',
-      (user) => {
+      user => {
         this.$delete(this.contacts, user.userId)
+      }
+    )
+
+    EventBus.$on(
+      'webrtc-request',
+      data => {
+        new WebRTCSender(this.published.find(pub => pub.id === data.uid))
       }
     )
 
@@ -566,6 +628,10 @@ export default {
 .input-buttons > li > .file-label {
   justify-content: center;
   align-items: center;
+}
+
+.input-buttons .file-input {
+  display: none;
 }
 
 li.send-btn {
