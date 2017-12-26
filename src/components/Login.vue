@@ -12,32 +12,32 @@
       </div>
       <div class="field">
         <p class="control has-icons-left has-icons-right">
-          <input class="input" type="text" placeholder="Nickname" :disabled="loading">
+          <input class="input" type="text" placeholder="Nickname" :disabled="loading" v-model.trim="nickName">
           <span class="icon is-small is-left">
             <i class="fa fa-user"></i>
           </span>
           <span class="icon is-small is-right">
-            <i class="fa fa-check"></i>
+            <i class="fa" :class="[nickValidityIcon]"></i>
           </span>
         </p>
       </div>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" placeholder="First name" :disabled="loading">
+          <input class="input" type="text" placeholder="First name" :disabled="loading" v-model.trim="firstName">
           <span class="icon is-small is-left">
           </span>
         </p>
       </div>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="text" placeholder="Last name" :disabled="loading">
+          <input class="input" type="text" placeholder="Last name" :disabled="loading" v-model.trim="lastName">
           <span class="icon is-small is-left">
           </span>
         </p>
       </div>
       <div class="field is-grouped is-grouped-right">
         <p class="control">
-          <a class="button is-info" :class="{ 'is-loading': loading }" @click="login()">
+          <a class="button is-info" :class="{ 'is-loading': loading }" :disabled="!readyForLogin" @click="login()">
             Login
           </a>
         </p>
@@ -47,32 +47,82 @@
 </template>
 
 <script>
-import EventBus from '../modules/events.js'
+import _ from 'lodash'
+import Auth from '../modules/auth'
+import EventBus from '../modules/events'
+
+const NICK_UNKNOWN = 0
+const NICK_INVALID = 1
+const NICK_VALID = 2
 
 export default {
   name: 'login',
 
   data () {
     return {
-      loading: false
+      loading: false,
+      nickValidity: NICK_UNKNOWN,
+
+      nickName: "",
+      firstName: "",
+      lastName: ""
+    }
+  },
+
+  computed: {
+    readyForLogin() {
+      return this.nickValidity === NICK_VALID && this.firstName.length > 0 && this.lastName.length > 0
+    },
+
+    nickValidityIcon() {
+      if (this.nickValidity === NICK_VALID) {
+        return 'fa-check'
+      }
+
+      if (this.nickValidity === NICK_INVALID) {
+        return 'fa-times'
+      }
+
+      return ''
+    }
+  },
+
+  watch: {
+    nickName() {
+      if (this.nickName.length >= 3) {
+        this.checkLogin()
+      } else {
+        this.nickValidity = NICK_UNKNOWN
+      }
     }
   },
 
   methods: {
+    checkLogin: _.debounce(
+      function() {
+        Auth.CheckLogin(this.nickName)
+          .then(data => this.nickValidity = NICK_VALID)
+          .catch(error => this.nickValidity = NICK_INVALID)
+      },
+      500
+    ),
+
     login() {
       this.loading = true
-      setTimeout(
-        () => {
+      Auth.Login(this.nickName, this.firstName, this.lastName)
+        .then(data => {
           this.loading = false
           EventBus.$emit(
             'logged-in',
             {
-              myid: "0", chatName: (["Awesome hero chat", "Dumb chat", "Stop chatting!"])[Math.floor(Math.random() * 3)]
+              myid: this.nickName,
+              chatName: data.chat.title,
+              contacts: data.chat.users,
+              messages: data.chat.messages
             }
           )
-        },
-        2000
-      )
+        })
+        .catch(error => this.loading = false)
     }
   }
 }
@@ -86,14 +136,23 @@ export default {
 .login .button {
   width: 100px;
 }
-.image.logo {
-  width: 290px;
-  height: 171px;
+@media screen and (min-height: 736px) {
+  .image.logo {
+    width: 290px;
+    height: 171px;
+  }  
+}
+@media screen and (max-height: 735px) {
+  .image.logo {
+    width: 145px;
+    height: 85px;
+  }  
 }
 .modal-background {
   background-color: #ccc;
 }
 .modal-content.box {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  max-height: none;
 }
 </style>
