@@ -50,6 +50,14 @@ module.exports = {
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
+    proxy: [{      
+      context: ['/chat'],
+      target: 'http://localhost:3000'
+    }, {
+      context: ['/ws'],
+      target: 'ws://localhost:3000',
+      ws: true
+    }],
     headers: {
       'Access-Control-Allow-Origin': '*'
     }
