@@ -24,6 +24,13 @@ export default {
         this.view = ChatUI
       }
     )
+    EventBus.$on(
+      'logged-out',
+      (chat) => {
+        this.chat = {}
+        this.view = Login
+      }
+    )
   },
 
   data() {

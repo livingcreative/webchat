@@ -8,8 +8,22 @@
             <div class="avatar"><span>You</span></div>
           </div>
           <div class="level-right">
-            <div class="menu-btn">
-              <ul><li></li><li></li><li></li></ul>
+            <div class="dropdown-background" :class="{ 'is-active': menuActive }" @click="menuClick()"></div>
+            <div class="dropdown is-right" :class="{ 'is-active': menuActive }">
+              <div class="dropdown-trigger">
+                <div class="menu-btn" :class="{ 'is-active': menuActive }" @click="menuClick()">
+                  <ul><li></li><li></li><li></li></ul>
+                </div>
+              </div>
+              <div class="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a @click.prevent="menuClick()" class="dropdown-item">Dropdown item</a>
+                  <a @click.prevent="menuClick()" class="dropdown-item">Other dropdown item</a>
+                  <a @click.prevent="menuClick()" class="dropdown-item">Other dropdown item</a>
+                  <hr class="dropdown-divider">
+                  <a @click.prevent="logOut()" class="dropdown-item">Log out</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -64,6 +78,16 @@ export default {
   name: 'chat-ui',
 
   methods: {
+    menuClick() {
+      this.menuActive = !this.menuActive
+    },
+
+    logOut() {
+      this.chatName = ""
+      this.myid = ""
+      EventBus.$emit('logged-out')
+    },
+
     smileClick() {
       EventBus.$emit(
         'message-arrived',
@@ -149,6 +173,8 @@ export default {
     return {
       chatName: this.chat.chatName,
       myid: this.chat.myid,
+
+      menuActive: false,
 
       message: "",
       contacts: {
@@ -282,6 +308,23 @@ export default {
 }
 .menu-btn:hover {
   background-color: #ececec;
+}
+.menu-btn.is-active {
+  background-color: #8cf;
+}
+.menu-btn.is-active li {
+  border-color: #24c;
+}
+.dropdown-background {
+  display: none;
+}
+.dropdown-background.is-active {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
 }
 .chat-bar {
   background-color: #ececec;

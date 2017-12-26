@@ -2,7 +2,7 @@
   <div class="inner-messages my">
     <div><small>{{ messageTime(message.time) }}</small></div>
     <div v-for="msg in message.inner" :key="msg">
-      <div class="message my" v-html="messageToHTML(msg)"></div>
+      <div class="message my"><div v-html="messageToHTML(msg)"></div></div>
     </div>
   </div>
 </template>
@@ -25,5 +25,8 @@ export default {
 }
 .inner-messages.my {
   text-align: right;
+}
+.message.my>div {
+  text-align: left;
 }
 </style>
