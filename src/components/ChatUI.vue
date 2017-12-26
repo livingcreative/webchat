@@ -34,10 +34,10 @@
         <div class="input-area">
           <div class="chat-container input-controls">
             <div class="columns chat-panel">
-              <div class="column is-three-quarters">
+              <div class="column is-four-fifths">
                 <textarea class="textarea" rows="3" placeholder="Type some text" v-model="message"></textarea>
               </div>
-              <div class="column is-one-quarter input-buttons-container">
+              <div class="column is-one-fifth input-buttons-container">
                 <ul class="input-buttons">
                   <li @click="smileClick()"><i class="fa fa-smile-o"></i></li>
                   <li @click="sendPicureClick()"><i class="fa fa-picture-o"></i></li>
@@ -59,10 +59,7 @@ import MessageList from './chat/MessageList'
 import EventBus from '../modules/events.js'
 
 export default {
-  components: {
-    'contact-list': ContactList,
-    'message-list': MessageList
-  },
+  components: { 'contact-list': ContactList, 'message-list': MessageList },
 
   name: 'chat-ui',
 
@@ -107,20 +104,22 @@ export default {
     EventBus.$on(
       'message-arrived',
       (message) => {
+        const itsme = message.userId === this.myid
+        const user = itsme ? null : this.contacts[message.userId]
+
         let lastChatMessage = this.messages.length > 0 ? this.messages[this.messages.length - 1] : null
 
         if (lastChatMessage === null || lastChatMessage.user.id !== message.userId) {
           lastChatMessage = {
             user: {
               id: message.userId,
-              itsme: message.userId === this.myid
+              itsme: itsme
             },
             time: message.time,
             inner: [ message.message ]
           }
 
-          if (!lastChatMessage.user.itsme) {
-            let user = this.contacts[lastChatMessage.user.id]
+          if (user) {
             lastChatMessage.user.firstName = user.firstName
             lastChatMessage.user.lastName = user.lastName
           }
@@ -128,6 +127,10 @@ export default {
           this.messages.push(lastChatMessage)
         } else {
           lastChatMessage.inner.push(message.message)
+        }
+
+        if (user) {
+          user.lastMessage = message.message
         }
 
         EventBus.$emit('update-message-list')

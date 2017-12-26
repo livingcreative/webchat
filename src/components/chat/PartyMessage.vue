@@ -20,10 +20,7 @@ export default {
   components: { 'avatar': Avatar },
   props: ['message'],
   name: 'party-message',
-  methods: {
-    messageToHTML,
-    messageTime
-  }
+  methods: { messageToHTML, messageTime }
 }
 </script>
 

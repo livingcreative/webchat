@@ -8,15 +8,14 @@
 import 'font-awesome/css/font-awesome.css'
 import 'bulma/css/bulma.css'
 import ChatUI from './components/ChatUI'
+import Login from './components/Login'
 import './assets/style.css'
 
 export default {
-  components: { 'chat-ui' : ChatUI },
+  components: { 'chat-ui': ChatUI, 'login': Login },
   name: 'app',
   data() {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
+    return { }
   }
 }
 </script>

@@ -5,7 +5,6 @@
 <script>
 export default {
   props: ['contact'],
-
   name: 'avatar',
 
   methods: {
