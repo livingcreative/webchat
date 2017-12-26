@@ -12,7 +12,7 @@
 <script>
 import PartyMessage from './PartyMessage'
 import MyMessage from './MyMessage'
-import EventBus from '../../modules/events.js'
+import EventBus from '../../modules/events'
 
 export default {
   components: { 'party-message': PartyMessage, 'my-message': MyMessage },

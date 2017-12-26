@@ -4,9 +4,9 @@ var webpack = require('webpack')
 module.exports = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'build.js'
+    path: path.resolve(__dirname, '../webchatserver/public'),
+    publicPath: '/',
+    filename: 'js/app.js'
   },
   module: {
     rules: [
@@ -34,6 +34,7 @@ module.exports = {
         test: /\.(png|jpg|gif|svg|ttf|woff|woff2|eot|otf)$/,
         loader: 'file-loader',
         options: {
+          outputPath: 'img/',
           name: '[name].[ext]?[hash]'
         }
       }

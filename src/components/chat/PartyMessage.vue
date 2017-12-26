@@ -14,7 +14,7 @@
 
 <script>
 import Avatar from '../common/Avatar'
-import { messageToHTML, messageTime } from '../../modules/messages.js'
+import { messageToHTML, messageTime } from '../../modules/messages'
 
 export default {
   components: { 'avatar': Avatar },

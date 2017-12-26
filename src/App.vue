@@ -9,8 +9,8 @@ import 'font-awesome/css/font-awesome.css'
 import 'bulma/css/bulma.css'
 import ChatUI from './components/ChatUI'
 import Login from './components/Login'
-import './assets/style.css'
-import EventBus from './modules/events.js'
+import './assets/css/style.css'
+import EventBus from './modules/events'
 
 export default {
   components: { 'chat-ui': ChatUI, 'login': Login },

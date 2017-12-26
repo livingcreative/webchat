@@ -4,7 +4,7 @@
     <div class="modal-content box">
       <div class="field is-grouped is-grouped-centered">
         <figure class="image logo">
-          <img src="../assets/logo.png">
+          <img src="../assets/img/logo.png">
         </figure>
       </div>
       <div class="field">

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { messageToHTML, messageTime } from '../../modules/messages.js'
+import { messageToHTML, messageTime } from '../../modules/messages'
 
 export default {
   props: ['message'],
