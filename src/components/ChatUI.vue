@@ -60,7 +60,7 @@ import EventBus from '../modules/events.js'
 
 export default {
   components: { 'contact-list': ContactList, 'message-list': MessageList },
-
+  props: ['chat'],
   name: 'chat-ui',
 
   methods: {
@@ -147,9 +147,10 @@ export default {
     }
 
     return {
-      chatName: "Awesome hero chat",
+      chatName: this.chat.chatName,
+      myid: this.chat.myid,
+
       message: "",
-      myid: "0",
       contacts: {
         "1": {
           firstName: "Gordon", lastName: "Freeman",
