@@ -3,9 +3,9 @@
     <div class="media-left">
       <avatar :contact="contact"></avatar>
     </div>
-    <div class="media-content">
-      <div><strong>{{ contact.firstName }} {{ contact.lastName }}</strong></div>
-      <div class="last-message">{{ contact.lastMessage }}</div>
+    <div class="media-content contact-info">
+      <div class="no-wrap"><strong>{{ contact.firstName }} {{ contact.lastName }}</strong></div>
+      <div class="no-wrap">{{ contact.lastMessage }}</div>
     </div>
   </div>
 </template>
@@ -24,9 +24,7 @@ export default {
 .contact-item {
   padding-left: 15px;
   padding-right: 15px;
-  left: 0px;
-  right: 0px;
-  overflow: hidden;
+  position: relative;
 }
 .contact-item:first-child {
   padding-top: 1rem;
@@ -37,10 +35,15 @@ export default {
 .media-content {
   position: relative;
 }
-.last-message {
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   position: absolute;
-  left: 0px;
-  right: 0px;
+  left: 76px;
+  right: 6px;
+}
+.no-wrap {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

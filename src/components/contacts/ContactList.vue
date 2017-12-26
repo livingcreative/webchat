@@ -1,9 +1,9 @@
 <template>
   <div>
     <contact-item
-        v-for="contact in contacts"
+        v-for="(contact, id) in contacts"
         :contact="contact"
-        :key="contact.id">
+        :key="id">
     </contact-item>
   </div>
 </template>

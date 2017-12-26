@@ -30,9 +30,7 @@
         <contact-list :contacts="contacts"></contact-list>
       </div>
       <div class="column is-four-fifths chat-messages">
-        <div class="chat-area">
-          <message-list :messages="messages" class="chat-container"></message-list>
-        </div>
+        <message-list :messages="messages" class="chat-area"></message-list>
         <div class="input-area">
           <div class="chat-container input-controls">
             <div class="columns chat-panel">
@@ -41,10 +39,10 @@
               </div>
               <div class="column is-one-quarter input-buttons-container">
                 <ul class="input-buttons">
-                  <li><i class="fa fa-smile-o"></i></li>
-                  <li><i class="fa fa-picture-o"></i></li>
-                  <li><i class="fa fa-paperclip"></i></li>
-                  <li class="send-btn"><i class="fa fa-arrow-right"></i></li>
+                  <li @click="smileClick()"><i class="fa fa-smile-o"></i></li>
+                  <li @click="sendPicureClick()"><i class="fa fa-picture-o"></i></li>
+                  <li @click="sendFileClick()"><i class="fa fa-paperclip"></i></li>
+                  <li class="send-btn" @click="sendMessage()"><i class="fa fa-arrow-right"></i></li>
                 </ul>
               </div>
             </div>
@@ -58,6 +56,7 @@
 <script>
 import ContactList from './contacts/ContactList'
 import MessageList from './chat/MessageList'
+import EventBus from '../modules/events.js'
 
 export default {
   components: {
@@ -67,49 +66,120 @@ export default {
 
   name: 'chat-ui',
 
+  methods: {
+    smileClick() {
+      EventBus.$emit(
+        'message-arrived',
+        {
+          time: new Date(),
+          userId: Math.floor(Math.random() * 5 + 1),
+          message: "Hey! This is incoming message from server!"
+        }
+      )
+    },
+
+    sendPictureClick() {
+
+    },
+
+    sendFileClick() {
+
+    },
+
+    sendMessage() {
+      let message = this.message.trim()
+
+      if (message.length) {
+        EventBus.$emit(
+          'message-arrived',
+          {
+            time: new Date(),
+            userId: this.myid,
+            message: this.message
+          }
+        )
+        this.message = ""      
+      }
+    }
+  },
+
+  mounted() {
+    EventBus.$on(
+      'message-arrived',
+      (message) => {
+        let lastChatMessage = this.messages.length > 0 ? this.messages[this.messages.length - 1] : null
+
+        if (lastChatMessage === null || lastChatMessage.user.id !== message.userId) {
+          lastChatMessage = {
+            user: {
+              id: message.userId,
+              itsme: message.userId === this.myid
+            },
+            time: message.time,
+            inner: [ message.message ]
+          }
+
+          if (!lastChatMessage.user.itsme) {
+            let user = this.contacts[lastChatMessage.user.id]
+            lastChatMessage.user.firstName = user.firstName
+            lastChatMessage.user.lastName = user.lastName
+          }
+
+          this.messages.push(lastChatMessage)
+        } else {
+          lastChatMessage.inner.push(message.message)
+        }
+
+        EventBus.$emit('update-message-list')
+      }
+    )
+  },
+
   data() {
+    const Time = (hours, minutes) => {
+      let date = new Date()
+      date.setHours(hours)
+      date.setMinutes(minutes)
+      return date
+    }
+
     return {
       chatName: "Awesome hero chat",
       message: "",
-      contacts: [
-        {
-          id: "1",
+      myid: "0",
+      contacts: {
+        "1": {
           firstName: "Gordon", lastName: "Freeman",
           lastMessage: "..."
         },
-        {
-          id: "2",
+        "2": {
           firstName: "Doom", lastName: "Guy",
           lastMessage: "Where are demons?"
         },
-        {
-          id: "3",
+        "3": {
           firstName: "Jesse", lastName: "Pinkman",
           lastMessage: "Bitch!"
         },
-        {
-          id: "4",
+        "4": {
           firstName: "Rick", lastName: "Grimes",
           lastMessage: "How many people did you kill?"
         },
-        {
-          id: "5",
+        "5": {
           firstName: "Thomas", lastName: "Anderson",
           lastMessage: "I followed the white rabbit"
         },
-        {
-          id: "6",
+        "6": {
           firstName: "Jessica", lastName: "Jones",
           lastMessage: "Got some booze?"
         },
-      ],
+      },
       messages: [
         {
           user: {
             id: "1",
             firstName: "Gordon", lastName: "Freeman"
           },
-          time: "1:12 PM",
+          time: Time(13, 25),
           inner: [
             "..."
           ]
@@ -119,7 +189,7 @@ export default {
             id: "2",
             firstName: "Doom", lastName: "Guy"
           },
-          time: "1:27 PM",
+          time: Time(13, 32),
           inner: [
             "Give me a gun!",
             "I need to shoot some demons now! I need to shoot some demons now! I need to shoot some demons now! I need to shoot some demons now!",
@@ -131,9 +201,10 @@ export default {
             id: "0",
             itsme: true
           },
-          time: "1:28 PM",
+          time: Time(13, 37),
           inner: [
             "I'm not a demon!",
+            'Very very very very very very very long long long long looooooooooooooooooooooooong message. Was not long enough though',
             "Don't shoot me, I want to live!"
           ]
         },
@@ -142,9 +213,9 @@ export default {
             id: "3",
             firstName: "Jesse", lastName: "Pinkman"
           },
-          time: "1:35 PM",
+          time: Time(13, 38),
           inner: [
-            "I'm not a demon too<br>Don't even try to shoot me!",
+            "I'm not a demon too\nDon't even try to shoot me!",
             "Bitch!"
           ]
         },
@@ -153,7 +224,7 @@ export default {
             id: "4",
             firstName: "Rick", lastName: "Grimes"
           },
-          time: "1:39 PM",
+          time: Time(13, 44),
           inner: [
             "Hey, Doom Guy",
             "How many people did you kill?"
@@ -164,7 +235,7 @@ export default {
             id: "5",
             firstName: "Thomas", lastName: "Anderson"
           },
-          time: "1:43 PM",
+          time: Time(13, 51),
           inner: ["I followed the white rabbit"]
         },
         {
@@ -172,7 +243,7 @@ export default {
             id: "6",
             firstName: "Jessica", lastName: "Jones"
           },
-          time: "1:52 PM",
+          time: Time(13, 58),
           inner: ["Got some booze?"]
         },
       ]
@@ -217,11 +288,6 @@ export default {
   height: 48px;
   font-size: 1.5em;
 }
-.chat-container {
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
 .chat-panel, .chat-panel:not(:last-child), .chat-panel:last-child {
   margin: 0;
 }
@@ -231,6 +297,7 @@ export default {
   top: 0;
   right: 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 }
 .main-bar {
   position: fixed;
@@ -268,6 +335,7 @@ export default {
   align-items: center;
   position: absolute;
   bottom: 0;
+  right: 0;
 }
 .input-buttons>li {
   color: #8ac;
