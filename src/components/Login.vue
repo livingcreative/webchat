@@ -11,7 +11,7 @@
         <h1 class="title">Welcome to WebRTC chat!</h1>
       </div>
       <div class="field">
-        <p class="control has-icons-left has-icons-right">
+        <p class="control has-icons-left has-icons-right" :class="{ 'is-loading': checking }">
           <input class="input" type="text" placeholder="Nickname" :disabled="loading" v-model.trim="nickName">
           <span class="icon is-small is-left">
             <i class="fa fa-user"></i>
@@ -58,8 +58,9 @@ const NICK_VALID = 2
 export default {
   name: 'login',
 
-  data () {
+  data() {
     return {
+      checking: false,
       loading: false,
       nickValidity: NICK_UNKNOWN,
 
@@ -69,12 +70,20 @@ export default {
     }
   },
 
+  created() {
+    this.checkLoginDebounced = _.debounce(this.checkLoginDebounced, 500)
+  },
+
   computed: {
     readyForLogin() {
       return this.nickValidity === NICK_VALID && this.firstName.length > 0 && this.lastName.length > 0
     },
 
     nickValidityIcon() {
+      if (this.checking) {
+        return ''
+      }
+
       if (this.nickValidity === NICK_VALID) {
         return 'fa-check'
       }
@@ -92,20 +101,24 @@ export default {
       if (this.nickName.length >= 3) {
         this.checkLogin()
       } else {
+        this.checkLoginDebounced.cancel()
         this.nickValidity = NICK_UNKNOWN
+        this.checking = false
       }
     }
   },
 
   methods: {
-    checkLogin: _.debounce(
-      function() {
-        Auth.CheckLogin(this.nickName)
-          .then(data => this.nickValidity = NICK_VALID)
-          .catch(error => this.nickValidity = NICK_INVALID)
-      },
-      500
-    ),
+    checkLoginDebounced() {
+      Auth.CheckLogin(this.nickName)
+        .then(data => { this.nickValidity = NICK_VALID; this.checking = false })
+        .catch(error => { this.nickValidity = NICK_INVALID; this.checking = false })
+    },
+
+    checkLogin() {
+      this.checking = true
+      this.checkLoginDebounced()
+    },
 
     login() {
       if (!this.readyForLogin) {

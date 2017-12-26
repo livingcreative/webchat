@@ -1,6 +1,9 @@
 html {
   overflow: hidden;
 }
+.button[disabled], .input[disabled] {
+  cursor: default;
+}
 .avatar {
   width: 48px;
   height: 48px;
