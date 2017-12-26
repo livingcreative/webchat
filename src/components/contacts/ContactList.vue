@@ -12,7 +12,7 @@
 import ContactItem from './ContactItem'
 
 export default {
-  components: { 'contact-item': ContactItem },
+  components: { ContactItem },
   name: 'contact-list',
   props: ['contacts']
 }

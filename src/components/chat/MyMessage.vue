@@ -11,7 +11,7 @@ import { messageTime } from '../../modules/messages'
 
 
 export default {
-  components: { 'message-block': MessageBlock },
+  components: { MessageBlock },
   props: ['message'],
   name: 'my-message',
   methods: { messageTime }

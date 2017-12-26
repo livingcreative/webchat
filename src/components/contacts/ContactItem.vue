@@ -14,7 +14,7 @@
 import Avatar from '../common/Avatar'
 
 export default {
-  components: { 'avatar': Avatar },
+  components: { Avatar },
   name: 'contact-item',
   props: ['contact']
 }

@@ -15,7 +15,7 @@ import MyMessage from './MyMessage'
 import EventBus from '../../modules/events'
 
 export default {
-  components: { 'party-message': PartyMessage, 'my-message': MyMessage },
+  components: { PartyMessage, MyMessage },
   props: ['messages'],
   name: 'message-list',
 

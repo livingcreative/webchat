@@ -13,7 +13,7 @@ import './assets/css/style.css'
 import EventBus from './modules/events'
 
 export default {
-  components: { 'chat-ui': ChatUI, 'login': Login },
+  components: { ChatUI, Login },
   name: 'app',
 
   mounted() {

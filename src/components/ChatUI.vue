@@ -96,7 +96,7 @@ import { WebRTCSender } from '../modules/webrtc'
 import { ATT_IMAGE, ATT_FILE, isFileAttachment, isImageAttachment } from '../modules/messages'
 
 export default {
-  components: { 'contact-list': ContactList, 'message-list': MessageList },
+  components: { ContactList, MessageList },
   props: ['chat'],
   name: 'chat-ui',
 

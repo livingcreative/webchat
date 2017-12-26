@@ -16,7 +16,7 @@ import MessageBlock from './MessageBlock'
 import { messageTime } from '../../modules/messages'
 
 export default {
-  components: { 'avatar': Avatar, 'message-block': MessageBlock },
+  components: { Avatar, MessageBlock },
   props: ['message'],
   name: 'party-message',
   methods: { messageTime }
