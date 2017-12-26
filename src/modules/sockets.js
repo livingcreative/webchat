@@ -33,7 +33,8 @@ SocketAPI.prototype.connect = function (id) {
                     {
                       time: new Date(message.time),
                       userId: message.id,
-                      message: message.message
+                      message: message.message,
+                      attachments: message.attachments
                     }
                 )
                 break

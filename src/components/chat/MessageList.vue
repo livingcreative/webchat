@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="message-list chat-container">
-      <div v-for="message in messages" :key="message.time.getTime()" class="message-block">
+      <div v-for="(message, index) in messages" :key="index" class="message-block">
         <my-message v-if="message.user.itsme" :message="message"></my-message>
         <party-message v-else :message="message"></party-message>
       </div>

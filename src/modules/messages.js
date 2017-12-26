@@ -1,3 +1,14 @@
+export const ATT_IMAGE = 0
+export const ATT_FILE = 1
+
+export function isImageAttachment(att) {
+  return att.type === ATT_IMAGE
+}
+
+export function isFileAttachment(att) {
+  return att.type === ATT_FILE
+}
+
 export function messageToHTML(message) {
   return message.replace("\n", "<br>")
 }

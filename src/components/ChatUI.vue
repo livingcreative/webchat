@@ -52,6 +52,13 @@
         <div class="chat-container input-controls">
           <div>
             <div>
+              <div v-if="attachments.length > 0" class="attachments">
+                <div v-for="(att, index) in attachments" :key="index" class="attachment">
+                  <i class="fa" :class="{ 'fa-file': isFileAttachment(att), 'fa-image': isImageAttachment(att) }"></i>
+                  <span>{{ att.name }}</span>
+                  <button class="delete" @click="removeAttachment(index)"></button>
+                </div>
+              </div>
               <textarea class="textarea" rows="3" placeholder="Type some text" v-model="message"></textarea>
             </div>
             <div>
@@ -59,13 +66,13 @@
                 <li @click="smileClick()"><i class="fa fa-smile-o"></i></li>
                 <li class="file">
                   <label class="file-label">
-                    <input type="file" class="file-input" accept=".jpg,.jpeg,.png,.bmp,.tif,.tiff," @change="imageChoosen($event)">
+                    <input type="file" class="file-input" accept="image/*" @change="imageChoosen($event)">
                     <i class="fa fa-picture-o"></i>
                   </label>
                 </li>
                 <li class="file">
                   <label class="file-label">
-                    <input type="file" class="file-input" name="">
+                    <input type="file" class="file-input" @change="fileChoosen($event)">
                     <i class="fa fa-paperclip"></i>
                   </label>
                 </li>
@@ -85,6 +92,7 @@ import MessageList from './chat/MessageList'
 import EventBus from '../modules/events'
 import Auth from '../modules/auth'
 import SocketAPI from '../modules/sockets'
+import { ATT_IMAGE, ATT_FILE, isFileAttachment, isImageAttachment } from '../modules/messages'
 
 export default {
   components: { 'contact-list': ContactList, 'message-list': MessageList },
@@ -103,6 +111,13 @@ export default {
       EventBus.$emit('logged-out')
     },
 
+    isFileAttachment,
+    isImageAttachment,
+
+    removeAttachment(index) {
+      this.attachments.splice(index, 1)
+    },
+
     smileClick() {
       EventBus.$emit(
         'message-arrived',
@@ -114,21 +129,34 @@ export default {
       )
     },
 
-    imageChoosen(e) {
-      this.message += `<div>${e.target.value}</div>`
-      e.target.value = null
-      console.log(e)
+    attachFiles(type, picker) {
+      for (var n = 0; n < picker.files.length; ++n) {
+        const file = picker.files.item(n)
+        this.attachments.push({
+          type: type, name: file.name, file: file
+        })
+      }
+      picker.value = null
     },
 
-    sendFileClick() {
+    imageChoosen(e) {
+      this.attachFiles(ATT_IMAGE, e.target)
+    },
 
+    fileChoosen(e) {
+      this.attachFiles(ATT_FILE, e.target)
     },
 
     sendMessage() {
       let message = this.message.trim()
 
-      if (message.length) {
-        SocketAPI.send({ type: 'message', message: this.message, time: new Date() })
+      if (message.length || this.attachments.length) {
+        SocketAPI.send({
+          type: 'message',
+          message: this.message,
+          time: new Date(),
+          attachments: this.attachments.map(att => ({ type: att.type, name: att.name }))
+        })
 
         /* TODO: this one will be used to display message in sending status, after actual WS message it will be updated to sent status
         EventBus.$emit(
@@ -140,7 +168,13 @@ export default {
           }
         )
         */
-        this.message = ""      
+
+        for (var att of this.attachments) {
+          this.published.push(att)
+        }
+
+        this.message = ""
+        this.attachments = []
       }
     }
   },
@@ -161,7 +195,7 @@ export default {
               itsme: itsme
             },
             time: message.time,
-            inner: [ message.message ]
+            inner: [ { text: message.message, attachments: message.attachments } ]
           }
 
           if (user) {
@@ -171,7 +205,7 @@ export default {
 
           this.messages.push(lastChatMessage)
         } else {
-          lastChatMessage.inner.push(message.message)
+          lastChatMessage.inner.push({ text: message.message, attachments: message.attachments })
         }
 
         if (user) {
@@ -227,9 +261,12 @@ export default {
       menuActive: false,
 
       message: "",
+      attachments: [],
+      published: [],
+
       contacts: this.chat.contacts,
       messages: this.chat.messages.reduce((res, val) => {
-        let user = res.find(value => value.user.id === val.user)
+        let user = res.find(value => value.user.id === val.user.id)
         if (!user) {
           user = {
             user: {
@@ -243,7 +280,7 @@ export default {
           res.push(user)
         }
         
-        user.inner.push(val.message)
+        user.inner.push({ text: val.message, attachments: val.attachments })
 
         return res
       }, [])
@@ -469,6 +506,29 @@ export default {
 .input-controls > div > div:last-child {
   display: flex;
   align-items: flex-end;
+}
+
+.input-controls .attachments {
+  margin: -2px;
+  margin-bottom: 10px;
+}
+
+.input-controls .attachment {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 2px 5px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2)
+}
+
+.input-controls .attachment {
+  margin: 2px 2px;
+}
+
+.input-controls .attachment > * {
+  margin: 2px 5px;
 }
 
 .input-buttons {

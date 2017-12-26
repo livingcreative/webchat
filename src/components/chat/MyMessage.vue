@@ -1,24 +1,25 @@
 <template>
   <div class="inner-messages my">
     <div><small>{{ messageTime(message.time) }}</small></div>
-    <div v-for="msg in message.inner" :key="msg">
-      <div class="message my"><div v-html="messageToHTML(msg)"></div></div>
-    </div>
+    <message-block class="my" :messages="message.inner"></message-block>
   </div>
 </template>
 
 <script>
-import { messageToHTML, messageTime } from '../../modules/messages'
+import MessageBlock from './MessageBlock'
+import { messageTime } from '../../modules/messages'
+
 
 export default {
+  components: { 'message-block': MessageBlock },
   props: ['message'],
   name: 'my-message',
-  methods: { messageToHTML, messageTime }
+  methods: { messageTime }
 }
 </script>
 
 <style>
-.message.my {
+.my .message {
   background-color: #fff;
   border-top-right-radius: 0px;
   margin-left: 100px;
@@ -26,7 +27,7 @@ export default {
 .inner-messages.my {
   text-align: right;
 }
-.message.my>div {
+.my .message>div {
   text-align: left;
 }
 </style>

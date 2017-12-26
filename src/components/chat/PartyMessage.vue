@@ -5,27 +5,26 @@
     </div>
     <div class="media-content inner-messages">
       <div><small>{{ message.user.firstName }} {{ message.user.lastName }}, {{ messageTime(message.time) }}</small></div>
-      <div v-for="msg in message.inner" :key="msg">
-        <div class="message party" v-html="messageToHTML(msg)"></div>
-      </div>
+      <message-block class="party" :messages="message.inner"></message-block>
     </div>
   </div>
 </template>
 
 <script>
 import Avatar from '../common/Avatar'
-import { messageToHTML, messageTime } from '../../modules/messages'
+import MessageBlock from './MessageBlock'
+import { messageTime } from '../../modules/messages'
 
 export default {
-  components: { 'avatar': Avatar },
+  components: { 'avatar': Avatar, 'message-block': MessageBlock },
   props: ['message'],
   name: 'party-message',
-  methods: { messageToHTML, messageTime }
+  methods: { messageTime }
 }
 </script>
 
 <style>
-.message.party {
+.party .message {
   background-color: #ececec;
   border-top-left-radius: 0px;
   margin-right: 30px;
