@@ -4,6 +4,4 @@ export const API_LOGOUT = "/chat/logout"
 
 import axios from 'axios'
 
-export const API = axios.create({
-    withCredentials: true
-})
+export const API = axios.create({ withCredentials: true })

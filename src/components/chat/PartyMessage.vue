@@ -16,13 +16,15 @@
 <script>
 import Avatar from '../common/Avatar'
 import MessageBlock from './MessageBlock'
-import { messageTime } from '../../modules/messages'
+import { Messages } from '../../modules/messages'
 
 export default {
-  methods: { messageTime }
     components: { Avatar, MessageBlock },
     props: ['message'],
     name: 'party-message',
+    methods: {
+        messageTime: Messages.messageTime
+    }
 }
 </script>
 

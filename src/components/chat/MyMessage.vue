@@ -7,14 +7,16 @@
 
 <script>
 import MessageBlock from './MessageBlock'
-import { messageTime } from '../../modules/messages'
+import { Messages } from '../../modules/messages'
 
 
 export default {
-  components: { MessageBlock },
-  props: ['message'],
-  name: 'my-message',
-  methods: { messageTime }
+    components: { MessageBlock },
+    props: ['message'],
+    name: 'my-message',
+    methods: {
+        messageTime: Messages.messageTime
+    }
 }
 </script>
 

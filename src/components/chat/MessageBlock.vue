@@ -37,68 +37,58 @@
 </template>
 
 <script>
-import { isFileAttachment, isImageAttachment, messageToHTML } from '../../modules/messages'
+import { Messages } from '../../modules/messages'
 import EventBus from '../../modules/events'
 import SocketAPI from '../../modules/sockets'
 import { WebRTCReceiver } from '../../modules/webrtc'
 
 export default {
-  props: ['messages', 'user'],
-  name: 'message-block',
-  methods: {
-    messageToHTML,
-    isFileAttachment,
-    isImageAttachment,
+    props: ['messages', 'user'],
+    name: 'message-block',
+    methods: {
+        messageToHTML: Messages.messageToHTML,
+        isFileAttachment: Messages.isFileAttachment,
+        isImageAttachment: Messages.isImageAttachment,
 
-    sizeToText(size) {
-      let maxsize = 1
-      for (var sz of [" B", " KB", " MB"]) {
-        if (size < maxsize * 1024) {
-          return (size / maxsize).toLocaleString(navigator.language, { maximumFractionDigits: 1 }) + sz
-        }
-        maxsize *= 1024
-      }
-    },
-
-    downloadAttachment(att, user) {
-      this.$set(att, 'downloading', true)
-
-      SocketAPI.expect({ type: 'webrtc-start', user: user, uid: att.id }, 'webrtc-accept').then(
-        data => {
-          if (data.result === 'rejected') {
-            att.downloading = false // TODO: mark unavailable
-          } else {
-            console.log('WEBRTC START READY ', data)
-            new WebRTCReceiver(att, blob => {
-              att.downloading = false
-              att.completed = true
-              if (isImageAttachment(att)) {
-                att.src = window.URL.createObjectURL(blob)
-              }
-              if (isFileAttachment(att)) {
-                this.$set(att, 'href', window.URL.createObjectURL(blob))
-              }
-            })
-          }
-        }
-      )
-
-/*
-      setTimeout(
-        () => {
-          att.downloading = false
-          this.$set(att, 'completed', true)
+        sizeToText(size) {
+            let maxsize = 1
+            for (var sz of [" B", " KB", " MB"]) {
+                if (size < maxsize * 1024) {
+                    return (size / maxsize).toLocaleString(navigator.language, { maximumFractionDigits: 1 }) + sz
+                }
+                maxsize *= 1024
+            }
         },
-        2000
-      )
-*/
-    },
 
-    previewLoaded(att) {
-      att.downloading = false
-      att.completed = true
+        downloadAttachment(att, user) {
+            this.$set(att, 'downloading', true)
+
+            SocketAPI.expect({ type: 'webrtc-start', user: user, uid: att.id }, 'webrtc-accept').then(
+                data => {
+                    if (data.result === 'rejected') {
+                        att.downloading = false // TODO: mark unavailable
+                    } else {
+                        console.log('WEBRTC START READY ', data)
+                        new WebRTCReceiver(att, blob => {
+                            att.downloading = false
+                            att.completed = true
+                            if (isImageAttachment(att)) {
+                                att.src = window.URL.createObjectURL(blob)
+                            }
+                            if (isFileAttachment(att)) {
+                                this.$set(att, 'href', window.URL.createObjectURL(blob))
+                            }
+                        })
+                    }
+                }
+            )
+        },
+
+        previewLoaded(att) {
+            att.downloading = false
+            att.completed = true
+        }
     }
-  }
 }
 </script>
 
