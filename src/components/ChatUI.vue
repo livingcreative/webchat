@@ -1,89 +1,89 @@
 <template>
-  <div class="chat-ui" :class="{ 'contacts-active': contactsActive }">
+    <div class="chat-ui" :class="{ 'contacts-active': contactsActive }">
 
-    <div class="header">
-      <div class="contacts-toggle" @click="contactsActive = !contactsActive">
-        <div></div><div></div><div></div>
-      </div>
-      <div class="chat-info">
-        <div>{{ chatName }}</div>
-        <div>This chat is awesome!</div>        
-      </div>
-      <div class="menu">
-        <div class="dropdown-background" :class="{ 'is-active': menuActive }" @click="menuClick()"></div>
-        <div class="dropdown is-right" :class="{ 'is-active': menuActive }">
-          <div class="dropdown-trigger">
-            <div class="menu-btn" :class="{ 'is-active': menuActive }" @click="menuClick()">
-              <ul><li></li><li></li><li></li></ul>
+        <div class="header">
+            <div class="contacts-toggle" @click="contactsActive = !contactsActive">
+                <div></div><div></div><div></div>
             </div>
-          </div>
-          <div class="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a @click.prevent="menuClick()" class="dropdown-item">Dropdown item</a>
-              <a @click.prevent="menuClick()" class="dropdown-item">Other dropdown item</a>
-              <a @click.prevent="menuClick()" class="dropdown-item">Other dropdown item</a>
-              <hr class="dropdown-divider">
-              <a @click.prevent="logOut()" class="dropdown-item">Log out</a>
+            <div class="chat-info">
+                <div>{{ chatName }}</div>
+                <div>This chat is awesome!</div>        
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="contacts">
-      <div class="media you">
-        <div class="media-left">
-          <div class="avatar"><span>You</span></div>
-        </div>
-        <div class="media-content contact-info">
-          <div class="no-wrap"><strong>{{ firstName }} {{ lastName }}</strong></div>
-          <div class="no-wrap"></div>
-        </div>
-      </div>
-      <div class="contact-container">
-        <contact-list :contacts="contacts"></contact-list>
-      </div>
-    </div>
-
-    <div class="messages">
-      <message-list :messages="messages" class="chat-area"></message-list>
-
-      <div class="input-area">
-        <div class="chat-container input-controls">
-          <div>
-            <div>
-              <div v-if="attachments.length > 0" class="attachments">
-                <div v-for="(att, index) in attachments" :key="index" class="attachment">
-                  <i class="fa" :class="{ 'fa-file': isFileAttachment(att), 'fa-image': isImageAttachment(att) }"></i>
-                  <span>{{ att.name }}</span>
-                  <button class="delete" @click="removeAttachment(index)"></button>
+            <div class="menu">
+                <div class="dropdown-background" :class="{ 'is-active': menuActive }" @click="menuClick()"></div>
+                <div class="dropdown is-right" :class="{ 'is-active': menuActive }">
+                    <div class="dropdown-trigger">
+                        <div class="menu-btn" :class="{ 'is-active': menuActive }" @click="menuClick()">
+                            <ul><li></li><li></li><li></li></ul>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            <a @click.prevent="menuClick" class="dropdown-item">Dropdown item</a>
+                            <a @click.prevent="menuClick" class="dropdown-item">Other dropdown item</a>
+                            <a @click.prevent="menuClick" class="dropdown-item">Other dropdown item</a>
+                            <hr class="dropdown-divider">
+                            <a @click.prevent="logOut" class="dropdown-item">Log out</a>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <textarea class="textarea" rows="3" placeholder="Type some text" v-model="message"></textarea>
             </div>
-            <div>
-              <ul class="input-buttons">
-                <li @click="smileClick()"><i class="fa fa-smile-o"></i></li>
-                <li class="file">
-                  <label class="file-label">
-                    <input type="file" class="file-input" accept="image/*" @change="imageChoosen($event)">
-                    <i class="fa fa-picture-o"></i>
-                  </label>
-                </li>
-                <li class="file">
-                  <label class="file-label">
-                    <input type="file" class="file-input" @change="fileChoosen($event)">
-                    <i class="fa fa-paperclip"></i>
-                  </label>
-                </li>
-                <li class="send-btn" @click="sendMessage()"><i class="fa fa-arrow-right"></i></li>
-              </ul>
-            </div>
-          </div>
         </div>
-      </div>
+
+        <div class="contacts">
+            <div class="media you">
+                <div class="media-left">
+                    <div class="avatar"><span>You</span></div>
+                </div>
+                <div class="media-content contact-info">
+                    <div class="no-wrap"><strong>{{ firstName }} {{ lastName }}</strong></div>
+                    <div class="no-wrap"></div>
+                </div>
+            </div>
+            <div class="contact-container">
+                <contact-list :contacts="contacts"></contact-list>
+            </div>
+        </div>
+
+        <div class="messages">
+            <message-list :messages="messages" class="chat-area"></message-list>
+
+            <div class="input-area">
+                <div class="chat-container input-controls">
+                    <div>
+                        <div>
+                            <div v-if="attachments.length > 0" class="attachments">
+                                <div v-for="(att, index) in attachments" :key="index" class="attachment">
+                                    <i class="fa" :class="{ 'fa-file': isFileAttachment(att), 'fa-image': isImageAttachment(att) }"></i>
+                                    <span>{{ att.name }}</span>
+                                    <button class="delete" @click="removeAttachment(index)"></button>
+                                </div>
+                            </div>
+                            <textarea class="textarea" rows="3" placeholder="Type some text" v-model="message"></textarea>
+                        </div>
+                        <div>
+                            <ul class="input-buttons">
+                                <li @click="smileClick()"><i class="fa fa-smile-o"></i></li>
+                                <li class="file">
+                                    <label class="file-label">
+                                        <input type="file" class="file-input" accept="image/*" @change="imageChoosen($event)">
+                                        <i class="fa fa-picture-o"></i>
+                                    </label>
+                                </li>
+                                <li class="file">
+                                    <label class="file-label">
+                                        <input type="file" class="file-input" @change="fileChoosen($event)">
+                                        <i class="fa fa-paperclip"></i>
+                                    </label>
+                                </li>
+                                <li class="send-btn" @click="sendMessage()"><i class="fa fa-arrow-right"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>

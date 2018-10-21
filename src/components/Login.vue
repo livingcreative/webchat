@@ -1,49 +1,45 @@
 <template>
-  <div class="modal is-active login">
-    <div class="modal-background"></div>
-    <div class="modal-content box">
-      <div class="field is-grouped is-grouped-centered">
-        <figure class="image logo">
-          <img src="../assets/img/logo.png">
-        </figure>
-      </div>
-      <div class="field">
-        <h1 class="title">Welcome to WebRTC chat!</h1>
-      </div>
-      <div class="field">
-        <p class="control has-icons-left has-icons-right" :class="{ 'is-loading': checking }">
-          <input class="input" type="text" placeholder="Nickname" :disabled="loading" v-model.trim="nickName">
-          <span class="icon is-small is-left">
-            <i class="fa fa-user"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fa" :class="[nickValidityIcon]"></i>
-          </span>
-        </p>
-      </div>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" placeholder="First name" :disabled="loading" v-model.trim="firstName">
-          <span class="icon is-small is-left">
-          </span>
-        </p>
-      </div>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input" type="text" placeholder="Last name" :disabled="loading" v-model.trim="lastName">
-          <span class="icon is-small is-left">
-          </span>
-        </p>
-      </div>
-      <div class="field is-grouped is-grouped-right">
-        <p class="control">
-          <a class="button is-info" :class="{ 'is-loading': loading }" :disabled="!readyForLogin" @click="login()">
-            Login
-          </a>
-        </p>
-      </div>
+    <div class="modal is-active login">
+        <div class="modal-background"></div>
+        <div class="modal-content box">
+            <div class="field is-grouped is-grouped-centered">
+                <figure class="image logo"><img src="../assets/img/logo.png"></figure>
+            </div>
+            <div class="field">
+                <h1 class="title">Welcome to WebRTC chat!</h1>
+            </div>
+            <div class="field">
+                <p class="control has-icons-left has-icons-right" :class="{ 'is-loading': checking }">
+                    <input class="input" type="text" placeholder="Nickname" :disabled="loading" v-model.trim="nickName">
+                    <span class="icon is-small is-left">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i class="fa" :class="[nickValidityIcon]"></i>
+                    </span>
+                </p>
+            </div>
+            <div class="field">
+                <p class="control has-icons-left">
+                    <input class="input" type="text" placeholder="First name" :disabled="loading" v-model.trim="firstName">
+                    <span class="icon is-small is-left"></span>
+                </p>
+            </div>
+            <div class="field">
+                <p class="control has-icons-left">
+                    <input class="input" type="text" placeholder="Last name" :disabled="loading" v-model.trim="lastName">
+                    <span class="icon is-small is-left"></span>
+                </p>
+            </div>
+            <div class="field is-grouped is-grouped-right">
+                <p class="control">
+                    <a class="button is-info" :class="{ 'is-loading': loading }" :disabled="!readyForLogin" @click="login()">
+                        Login
+                    </a>
+                </p>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -149,29 +145,29 @@ export default {
 
 <style>
 .login .title {
-  padding: 20px 0;
-  text-align: center;
+    padding: 20px 0;
+    text-align: center;
 }
 .login .button {
-  width: 100px;
+    width: 100px;
 }
 @media screen and (min-height: 736px) {
-  .image.logo {
-    width: 290px;
-    height: 171px;
-  }  
+    .image.logo {
+        width: 290px;
+        height: 171px;
+    }  
 }
 @media screen and (max-height: 735px) {
-  .image.logo {
-    width: 145px;
-    height: 85px;
-  }  
+    .image.logo {
+        width: 145px;
+        height: 85px;
+    }  
 }
 .modal-background {
-  background-color: #ccc;
+    background-color: #ccc;
 }
 .modal-content.box {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  max-height: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    max-height: none;
 }
 </style>

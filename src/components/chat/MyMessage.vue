@@ -1,8 +1,8 @@
 <template>
-  <div class="inner-messages my">
-    <div><small>{{ messageTime(message.time) }}</small></div>
-    <message-block class="my" :messages="message.inner"></message-block>
-  </div>
+    <div class="inner-messages my">
+        <div><small>{{ messageTime(message.time) }}</small></div>
+        <message-block class="my" :messages="message.inner"></message-block>
+    </div>
 </template>
 
 <script>
@@ -20,17 +20,17 @@ export default {
 
 <style>
 .my .message {
-  background-color: #fff;
-  border-top-right-radius: 0px;
-  margin-left: 100px;
+    background-color: #fff;
+    border-top-right-radius: 0px;
+    margin-left: 100px;
 }
 .inner-messages.my {
-  text-align: right;
+    text-align: right;
 }
 .my .message > .text {
-  text-align: left;
+    text-align: left;
 }
 .my .message .attachment .button:not(.is-loading) {
-  display: none;
+    display: none;
 }
 </style>
