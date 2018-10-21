@@ -125,7 +125,6 @@ export default {
             Auth.Login(this.nickName, this.firstName, this.lastName)
                 .then(data => {
                     this.loading = false
-                    console.log('EMIT LOGGED-IN', data)
                     EventBus.$emit(
                         'logged-in',
                         {
