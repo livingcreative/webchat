@@ -2,7 +2,7 @@
   "name": "webchat",
   "description": "WebRTC chat example",
   "version": "1.0.0",
-  "author": "livingcreative <dnkreative@gmail.com>",
+  "author": "livingcreative",
   "license": "MIT",
   "private": true,
   "scripts": {
