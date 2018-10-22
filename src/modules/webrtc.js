@@ -47,28 +47,24 @@ export class WebRTCReceiver {
             this.channel.onclose = () => console.debug('RCV STATUS: ', this.channel.readyState)
         }
 
-        SocketAPI.expect({ type: 'webrtc-ready', uid: att.id }, 'webrtc-description')
-            .then(data => {
-                console.debug('RTC READY ', data)
-                return this.connection.setRemoteDescription(data.desc)
-            })
-            .then(() => {
-                console.debug('RTC CREATE ANSWER')
+        const startWebRTC = async () => {
+            let data = await SocketAPI.expect({ type: 'webrtc-ready', uid: att.id }, 'webrtc-description')
+            console.debug('RTC READY ', data)
 
-                this.candidates.forEach(
-                    c => this.connection.addIceCandidate(c)
-                )
+            await this.connection.setRemoteDescription(data.desc)
+            
+            console.debug('RTC CREATE ANSWER')
 
-                return this.connection.createAnswer()
-            })
-            .then(answer => {
-                console.debug('RTC ANSWER ', answer)
-                return this.connection.setLocalDescription(answer)
-            })
-            .then(() => {
-                console.debug('RTC SENDING RCV DESC')
-                SocketAPI.send({ type: 'webrtc-description', uid: att.id, desc: this.connection.localDescription })
-            })
+            this.candidates.forEach(c => this.connection.addIceCandidate(c))
+            let answer = await this.connection.createAnswer()
+
+            console.debug('RTC ANSWER ', answer)
+            await this.connection.setLocalDescription(answer)
+
+            console.debug('RTC SENDING RCV DESC')
+            SocketAPI.send({ type: 'webrtc-description', uid: att.id, desc: this.connection.localDescription })
+        }
+        startWebRTC()
     }
 }
 
@@ -116,8 +112,6 @@ export class WebRTCSender {
                     left = 65536
                 }
                 reader.onload = () => {
-                    //console.log('RTC SENT SLICE: ', senddata.sent, ' ', senddata.total)
-
                     senddata.sent += left
                     senddata.channel.send(reader.result)
 
@@ -141,22 +135,21 @@ export class WebRTCSender {
             this.connection.close()
         }
 
-        this.connection.createOffer()
-            .then(offer => {
-                console.debug('RTC OFFER ', offer)
-                return this.connection.setLocalDescription(offer)
-            })
-            .then(() => {
-                console.debug('RTC SENDING SND DESC ')
-                return SocketAPI.expect({ type: 'webrtc-description', uid: att.id, desc: this.connection.localDescription }, 'webrtc-description')
-            })
-            .then(data => {
-                console.debug('RTC RCV DESC ARRRIVED ', data)
-                return this.connection.setRemoteDescription(data.desc)
-            })
-            .then(() => {
-                console.debug('RTC SND DESC SET')
-                this.candidates.forEach(c => this.connection.addIceCandidate(c))
-            })
+        const startWebRTC = async () => {
+            let offer = this.connection.createOffer()
+
+            console.debug('RTC OFFER ', offer)
+            await this.connection.setLocalDescription(offer)
+
+            console.debug('RTC SENDING SND DESC ')
+            let data = await SocketAPI.expect({ type: 'webrtc-description', uid: att.id, desc: this.connection.localDescription }, 'webrtc-description')
+
+            console.debug('RTC RCV DESC ARRRIVED ', data)
+            await this.connection.setRemoteDescription(data.desc)
+
+            console.debug('RTC SND DESC SET')
+            this.candidates.forEach(c => this.connection.addIceCandidate(c))
+        }
+        startWebRTC()
     }
 }

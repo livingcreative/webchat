@@ -105,10 +105,15 @@ export default {
     },
 
     methods: {
-        checkLoginDebounced() {
-          Auth.CheckLogin(this.nickName)
-            .then(data => { this.nickValidity = NICK_VALID; this.checking = false })
-            .catch(error => { this.nickValidity = NICK_INVALID; this.checking = false })
+        async checkLoginDebounced() {
+            try {
+                await Auth.CheckLogin(this.nickName)
+                this.nickValidity = NICK_VALID
+                this.checking = false
+            } catch (er) {
+                this.nickValidity = NICK_INVALID
+                this.checking = false
+            }
         },
 
         checkLogin() {
@@ -116,28 +121,29 @@ export default {
             this.checkLoginDebounced()
         },
 
-        login() {
+        async login() {
             if (!this.readyForLogin) {
                 return
             }
 
             this.loading = true
-            Auth.Login(this.nickName, this.firstName, this.lastName)
-                .then(data => {
-                    this.loading = false
-                    EventBus.$emit(
-                        'logged-in',
-                        {
-                            myid: this.nickName,
-                            firstName: this.firstName,
-                            lastName: this.lastName,
-                            chatName: data.data.chat.title,
-                            contacts: data.data.chat.users,
-                            messages: data.data.chat.messages
-                        }
-                    )
-                })
-                .catch(error => this.loading = false)
+            try {
+                let result = await Auth.Login(this.nickName, this.firstName, this.lastName)
+                this.loading = false
+                EventBus.$emit(
+                    'logged-in',
+                    {
+                        myid: this.nickName,
+                        firstName: this.firstName,
+                        lastName: this.lastName,
+                        chatName: result.data.chat.title,
+                        contacts: result.data.chat.users,
+                        messages: result.data.chat.messages
+                    }
+                )
+            } catch (e) {
+                this.loading = false
+            }
         }
     }
 }

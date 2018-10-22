@@ -120,16 +120,7 @@ export default {
         },
 
         smileClick() {
-            /*
-            EventBus.$emit(
-                'message-arrived',
-                {
-                    time: new Date(),
-                    userId: Math.floor(Math.random() * 5 + 1),
-                    message: "Hey! This is incoming message from server!"
-                }
-            )
-            */
+            // TODO: smiles
         },
 
         attachmentId() {

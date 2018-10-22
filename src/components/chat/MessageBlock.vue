@@ -60,28 +60,26 @@ export default {
             }
         },
 
-        downloadAttachment(att, user) {
+        async downloadAttachment(att, user) {
             this.$set(att, 'downloading', true)
 
-            SocketAPI.expect({ type: 'webrtc-start', user: user, uid: att.id }, 'webrtc-accept').then(
-                data => {
-                    if (data.result === 'rejected') {
-                        att.downloading = false // TODO: mark unavailable
-                    } else {
-                        console.log('WEBRTC START READY ', data)
-                        new WebRTCReceiver(att, blob => {
-                            att.downloading = false
-                            att.completed = true
-                            if (isImageAttachment(att)) {
-                                att.src = window.URL.createObjectURL(blob)
-                            }
-                            if (isFileAttachment(att)) {
-                                this.$set(att, 'href', window.URL.createObjectURL(blob))
-                            }
-                        })
+            let data = await SocketAPI.expect({ type: 'webrtc-start', user: user, uid: att.id }, 'webrtc-accept')
+
+            if (data.result === 'rejected') {
+                att.downloading = false // TODO: mark unavailable
+            } else {
+                console.debug('WEBRTC START READY ', data)
+                new WebRTCReceiver(att, blob => {
+                    att.downloading = false
+                    att.completed = true
+                    if (isImageAttachment(att)) {
+                        att.src = window.URL.createObjectURL(blob)
                     }
-                }
-            )
+                    if (isFileAttachment(att)) {
+                        this.$set(att, 'href', window.URL.createObjectURL(blob))
+                    }
+                })
+            }
         },
 
         previewLoaded(att) {
