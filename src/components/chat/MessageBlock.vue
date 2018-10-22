@@ -90,34 +90,40 @@ export default {
 }
 </script>
 
-<style>
-.attachments .message .attachment > *:not(:first-child) {
-    margin-left: 5px;
-}
-.attachments .message > .attachment > i.fa {
-    color: #aaa;
-}
-.attachments .message > .attachment > .button {
-    border: none;
-    background: none;
-    color: #8ac;
-    width: 24px;
-    height: 24px;
-}
-.attachments .message > .attachment > .button:hover {
-    background: #8cf;
-    color: #fff;
-    border-radius: 12px;
-}
+<style lang="scss">
+.attachments {
+    .message {
+        .attachment > *:not(:first-child) {
+            margin-left: 5px;
+        }
 
-.att-info {
-    text-align: right;
-    color: #ccc;
-    font-size: 0.75em;
-}
+        > .attachment {
+            > i.fa {
+                color: #aaa;
+            }
+            > a.button {
+                border: none;
+                background: none;
+                color: #8ac;
+                width: 24px;
+                height: 24px;
+                &:hover {
+                    background: #8cf;
+                    color: #fff;
+                    border-radius: 12px;
+                }
+            }
+            .att-info {
+                text-align: right;
+                color: #ccc;
+                font-size: 0.75em;
+            }
+        }
 
-.message .preview {
-    max-width: 200px;
-    margin: 4px 0;
+        .preview {
+            max-width: 200px;
+            margin: 4px 0;
+        }
+    }
 }
 </style>

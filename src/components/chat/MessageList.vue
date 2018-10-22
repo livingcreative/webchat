@@ -30,9 +30,12 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .message-list {
     padding-top: 1rem;
+    .media-content {
+        overflow: inherit;
+    }
 }
 .message-block {
     padding-bottom: 10px;

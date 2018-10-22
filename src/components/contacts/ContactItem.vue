@@ -20,29 +20,30 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .contact-item {
     padding-left: 15px;
     padding-right: 15px;
     position: relative;
+    &:first-child {
+        padding-top: 1rem;
+    }
+    &:last-child {
+        padding-bottom: 1rem;
+    }
+    .media-content {
+        position: relative;
+    }
+    .contact-info {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: absolute;
+        left: 76px;
+        right: 6px;
+    }
 }
-.contact-item:first-child {
-    padding-top: 1rem;
-}
-.contact-item:last-child {
-    padding-bottom: 1rem;
-}
-.media-content {
-    position: relative;
-}
-.contact-info {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    position: absolute;
-    left: 76px;
-    right: 6px;
-}
+
 .no-wrap {
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -20,19 +20,23 @@ export default {
 }
 </script>
 
-<style>
-.my .message {
-    background-color: #fff;
-    border-top-right-radius: 0px;
-    margin-left: 100px;
-}
-.inner-messages.my {
-    text-align: right;
-}
-.my .message > .text {
-    text-align: left;
-}
-.my .message .attachment .button:not(.is-loading) {
-    display: none;
+<style lang="scss">
+.inner-messages {
+    &.my {
+        text-align: right;
+    }
+    .my {
+        .message {
+            background-color: #fff;
+            border-top-right-radius: 0px;
+            margin-left: 100px;
+            > .text {
+               text-align: left;
+            }
+            .attachment .button:not(.is-loading) {
+                display: none;
+            }
+        }
+    }
 }
 </style>

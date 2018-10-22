@@ -149,26 +149,26 @@ export default {
 }
 </script>
 
-<style>
-.login .title {
-    padding: 20px 0;
-    text-align: center;
+<style lang="scss">
+.login {
+    .title {
+        padding: 20px 0;
+        text-align: center;
+    }
+    .button {
+        width: 100px;
+    }
 }
-.login .button {
-    width: 100px;
-}
-@media screen and (min-height: 736px) {
-    .image.logo {
+.image.logo {
+    @media screen and (min-height: 736px) {
         width: 290px;
         height: 171px;
-    }  
-}
-@media screen and (max-height: 735px) {
-    .image.logo {
+    }
+    @media screen and (max-height: 735px) {
         width: 145px;
         height: 85px;
-    }  
-}
+    }
+}  
 .modal-background {
     background-color: #ccc;
 }
