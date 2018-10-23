@@ -58,10 +58,7 @@ module.exports = {
       context: ['/ws'],
       target: 'ws://localhost:3000',
       ws: true
-    }],
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    }
+    }]
   },
   performance: {
     hints: false
