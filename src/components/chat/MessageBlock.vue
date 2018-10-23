@@ -72,10 +72,10 @@ export default {
                 new WebRTCReceiver(att, blob => {
                     att.downloading = false
                     att.completed = true
-                    if (isImageAttachment(att)) {
+                    if (this.isImageAttachment(att)) {
                         att.src = window.URL.createObjectURL(blob)
                     }
-                    if (isFileAttachment(att)) {
+                    if (this.isFileAttachment(att)) {
                         this.$set(att, 'href', window.URL.createObjectURL(blob))
                     }
                 })

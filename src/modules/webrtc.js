@@ -136,7 +136,7 @@ export class WebRTCSender {
         }
 
         const startWebRTC = async () => {
-            let offer = this.connection.createOffer()
+            let offer = await this.connection.createOffer()
 
             console.debug('RTC OFFER ', offer)
             await this.connection.setLocalDescription(offer)
